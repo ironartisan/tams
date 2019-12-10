@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="common/backstageNavigator.html :: head"></div>
+</head>
+
+<body>
+<div th:replace="common/backstageNavigator.html :: banner"></div>
+<div class="container-fluid" id="TI">
+    <div class="row">
+        <div th:replace="common/backstageNavigator.html :: navi"></div>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4" method="post" th:action="@{/SeacherBooks}">
+
+            <form class="form-inline mt-2 mt-md-0" method="post" th:action="@{/SearchBooks}">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">专著编号</span>
+                    </div>
+                    <input class="form-control mr-sm-2" type="text" th:name="bno" v-model="searchBook.bno"
+                           placeholder="专著编号"
+                           aria-label="Search">
+                </div>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">专著名称</span>
+                    </div>
+                    <input class="form-control mr-sm-2" type="text" th:name="bname" v-model="searchBook.bname"
+                           placeholder="专著名称"
+                           aria-label="Search">
+                </div>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">作者</span>
+                    </div>
+                    <input class="form-control mr-sm-2" type="text" th:name="author" v-model="searchBook.author"
+                           placeholder="作者"
+                           aria-label="Search">
+                </div>
+
+                <button class="btn btn-outline-primary mr-sm-2" type="submit">
+                    <span data-feather="search"></span>
+                    搜索
+                </button>
+            </form>
+            <h1></h1>
+            <a href="/BooksAddAction" class="btn btn-outline-primary mr-sm-2" role="button">
+                <span data-feather="user-plus"></span>
+                添加项目
+            </a>
+
+            <h1></h1>
+            <table class="table">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">编号</th>
+                    <th scope="col">名称</th>
+                    <th scope="col">作者</th>
+                    <th scope="col">学科</th>
+                    <th scope="col">类型</th>
+                    <th scope="col">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                <tr v-for="(book, index) in pagebooks">
+                    <td>{{book.bno}}</td>
+                    <td>{{book.bname}}</td>
+                    <td>{{book.author}}</td>
+                    <td>{{book.type}}</td>
+                    <td>{{book.rank}}</td>
+                    <td>
+                        <button class="btn btn-outline-primary btn-sm" v-on:click="change(book.bno)" type="button">
+                            修改
+                        </button>
+
+                        <button class="btn btn-outline-primary btn-sm" v-on:click="del(book.bno)" type="button">
+                            删除
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!--分页-->
+            <div>
+                <button @click="prePage()" id="btnprepage">上一页</button>
+                <button @click="nextPage()" id="btnnextpage">下一页</button>
+                <input type="text" v-model="jumppage" style="width: 40px">
+                <button @click="leapPage()">跳转</button>
+                <label>当前{{ currentpage+1 }}/{{ pagenum }}</label>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+    var ti = new Vue({
+        el: '#TI',
+        mounted:function() {
+            this.getpage()
+
+        },
+        methods: {
+            getpage: function() {
+                this.pagenum = Math.ceil(this.books.length / this.pagesize) || 1;
+                for(var i = 0;i < this.pagenum;i ++) {
+                    this.totalpage[i] = this.books.slice(this.pagesize * i, this.pagesize * (1+i));
+                }
+                this.pagebooks = this.totalpage[this.currentpage];
+            },
+            prePage: function() {
+                if(this.currentpage-1 == -1) return;
+                this.pagebooks = this.totalpage[-- this.currentpage];
+            },
+            nextPage: function() {
+                if(this.currentpage == this.pagenum-1) return;
+                this.pagebooks = this.totalpage[++ this.currentpage];
+            },
+            leapPage: function () {
+                if(this.jumppage > this.pagenum || this.jumppage < 1) {
+                    alert('输入有误');
+                } else {
+                    this.currentpage = this.jumppage-1;
+                    this.pagebooks = this.totalpage[this.currentpage];
+                }
+            },
+            change: function (bno) {
+                // alert(bno);
+                window.location = "/UpdateBook?bno=" + bno;
+            },
+            del: function (bno) {
+                // delete(bno);
+                window.location = "/DeleteBook?bno=" + bno;
+            }
+        },
+        data: {
+            searchBook: {
+                bno: null,
+                bname: '',
+                author: null,
+                type:'',
+                rank:''
+            },
+            jumppage: null,
+            pagesize: 8,
+            pagebooks: [],
+            totalpage: [],
+            pagenum: '',
+            currentpage: 0,
+            books: [[${allBook}]]
+        }
+    })
+</script>
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+
+<!-- Graphs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+
+</body>
+
+</html>
