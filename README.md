@@ -5,11 +5,11 @@
 
 #### flyway
 * 版本迭代
-* mvn flyway:migrate
+mvn flyway:migrate
 * 版本修复
-* mvn flyway:repair
+mvn flyway:repair
 * 清除数据
-* mvn flyway:clean
+mvn flyway:clean
 
 #### mybatis.generator
 * 自动生成mapper文件

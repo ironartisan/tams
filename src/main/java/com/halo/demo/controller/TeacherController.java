@@ -40,7 +40,7 @@ public class TeacherController {
 
     @RequestMapping("/TeachersAddAction")
     public String teachersAdd(HttpServletRequest httpServletRequest) {
-        httpServletRequest.setAttribute("needUpdateTeacher", null);
+        httpServletRequest.setAttribute("UpdateTeacher", null);
         return "teachers_add";
     }
 
@@ -65,7 +65,7 @@ public class TeacherController {
         String tno = httpServletRequest.getParameter("tno");
         int tno_int = Integer.parseInt(tno);
         Teacher teacher = teacherService.getTeacherByTno(tno_int);
-        paramMap.put("needUpdateTeacher", teacher);
+        paramMap.put("updateTeacher", teacher);
         return "teachers_alter";
     }
 

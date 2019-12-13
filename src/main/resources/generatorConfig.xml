@@ -35,6 +35,7 @@
         <table tableName="paper" domainObjectName="Paper"></table>
         <table tableName="book" domainObjectName="Book"></table>
         <table tableName="game" domainObjectName="Game"></table>
+        <table tableName="site" domainObjectName="Site"></table>
 
 
     </context>
