@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -69,7 +70,31 @@ public class TeacherController {
         return "teachers_alter";
     }
 
+    @PostMapping("/SearchTeachers")
+    public String SearchTeachers(HttpServletRequest httpServletRequest) {
 
+        Teacher teacher = new Teacher();
+        Integer tno = (httpServletRequest.getParameter("tno").equals("")) ? null : Integer.parseInt(httpServletRequest.getParameter("tno"));
+        String tname = (httpServletRequest.getParameter("tname").equals("")) ? null : httpServletRequest.getParameter("tname");
+        String email = (httpServletRequest.getParameter("email").equals("")) ? null : httpServletRequest.getParameter("email");
+        String rank = (httpServletRequest.getParameter("rank").equals("")) ? null : httpServletRequest.getParameter("rank");
+        teacher.setTno(tno);
+        teacher.setTname(tname);
+        teacher.setRank(email);
+        teacher.setRank(rank);
+        List<Teacher> teachersByExample = teacherService.getTeacherByExample(teacher);
+        System.out.println(teachersByExample);
+        httpServletRequest.getSession().setAttribute("allTeacher", teachersByExample);
+        return "forward:/TeachersPage";
+    }
+
+    @RequestMapping("/TeachersPage")
+    public String teachersPage(HttpServletRequest httpServletRequest) {
+        Object allTeacher = httpServletRequest.getSession().getAttribute("allTeacher");
+        System.out.println(allTeacher);
+        httpServletRequest.setAttribute("allTeacher", allTeacher);
+        return "teachers_info";
+    }
     @RequestMapping("/DeleteTeacher")
     public String DeleteTeacher(HttpServletRequest httpServletRequest) {
         String tno = httpServletRequest.getParameter("tno");

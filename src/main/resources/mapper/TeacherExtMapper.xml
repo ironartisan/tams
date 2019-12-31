@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.halo.demo.mapper.TeacherExtMapper">
+
+  <select id="getTeachersByExample" parameterType="com.halo.demo.model.TeacherExample"
+          resultType="com.halo.demo.model.Teacher">
+    select * from tuser
+    <where>
+      <if test="tno!=null">
+        tno = #{tno}
+      </if>
+      <if test="tname!=null">
+        and tname = #{tname}
+      </if>
+      <if test="rank!=null">
+        and rank = #{rank}
+      </if>
+      <if test="email!=null">
+        and email = #{email}
+      </if>
+    </where>
+  </select>
+</mapper>

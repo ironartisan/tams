@@ -1,5 +1,6 @@
 package com.halo.demo.service;
 
+import com.halo.demo.mapper.TeacherExtMapper;
 import com.halo.demo.mapper.TeacherMapper;
 import com.halo.demo.model.Teacher;
 import com.halo.demo.model.TeacherExample;
@@ -19,6 +20,8 @@ public class TeacherService {
 
     @Autowired
     private TeacherMapper teacherMapper;
+    @Autowired
+    private TeacherExtMapper teacherExtMapper;
 
     public List<Teacher> getAllTeacher() {
         TeacherExample teacherExample = new TeacherExample();
@@ -50,5 +53,10 @@ public class TeacherService {
 
     public void delTeacherByTno(int tno_int) {
         teacherMapper.deleteByPrimaryKey(tno_int);
+    }
+
+    public List<Teacher> getTeacherByExample(Teacher teacher) {
+
+        return teacherExtMapper.getTeachersByExample(teacher);
     }
 }
