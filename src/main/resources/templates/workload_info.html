@@ -15,24 +15,18 @@
             <table class="table">
                 <thead class="thead-light">
                 <tr>
-                    <th scope="col">序号</th>
                     <th scope="col">教师编号</th>
                     <th scope="col">教师名称</th>
                     <th scope="col">工作量</th>
-                    <th scope="col">操作</th>
+                    <th scope="col"><a href="/ExportExcel"><span data-feather="save"></span>导出EXCEL</a></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                <tr v-for="(data, index) in pagedatas">
-                    <td>{{data.rankno}}</td>
-                    <td>{{data.gain}}</td>
-                    <td>{{data.type}}</td>
-                    <td>{{data.rank}}</td>
-                    <td>
-                        <button class="btn btn-outline-primary btn-sm" v-on:click="change(site.rankno)" type="button">
-                            修改
-                        </button>
+                <tr v-for="(workload, index) in pageworkloads">
+                    <td>{{workload.tno}}</td>
+                   <td>{{workload.tname}}</td>
+                    <td>{{workload.workload}}</td>
 
                     </td>
                 </tr>
@@ -41,7 +35,7 @@
             <!--分页-->
             <div>
                 <button @click="prePage()" id="btnprepage">上一页</button>
-                <button @click="nextPage()" id="btnnextpage">下一页</button>
+                        <button @click="nextPage()" id="btnnextpage">下一页</button>
                 <input type="text" v-model="jumppage" style="width: 40px">
                 <button @click="leapPage()">跳转</button>
                 <label>当前{{ currentpage+1 }}/{{ pagenum }}</label>
@@ -59,33 +53,28 @@
         },
         methods: {
             getpage: function() {
-                this.pagenum = Math.ceil(this.sites.length / this.pagesize) || 1;
+                this.pagenum = Math.ceil(this.workloads.length / this.pagesize) || 1;
                 for(var i = 0;i < this.pagenum;i ++) {
-                    this.totalpage[i] = this.sites.slice(this.pagesize * i, this.pagesize * (1+i));
+                    this.totalpage[i] = this.workloads.slice(this.pagesize * i, this.pagesize * (1+i));
                 }
-                this.pagesites = this.totalpage[this.currentpage];
+                this.pageworkloads = this.totalpage[this.currentpage];
             },
             prePage: function() {
                 if(this.currentpage-1 == -1) return;
-                this.pagesites = this.totalpage[-- this.currentpage];
+                this.pageworkloads = this.totalpage[-- this.currentpage];
             },
             nextPage: function() {
                 if(this.currentpage == this.pagenum-1) return;
-                this.pagesites = this.totalpage[++ this.currentpage];
+                this.pageworkloads = this.totalpage[++ this.currentpage];
             },
             leapPage: function () {
                 if(this.jumppage > this.pagenum || this.jumppage < 1) {
                     alert('输入有误');
                 } else {
                     this.currentpage = this.jumppage-1;
-                    this.pagesites = this.totalpage[this.currentpage];
+                    this.pageworkloads = this.totalpage[this.currentpage];
                 }
             },
-            change: function (rankno) {
-                // alert(rankno);
-                window.location = "/UpdateSite?rankno=" + rankno;
-            },
-
         },
         data: {
             jumppage: null,
@@ -94,7 +83,7 @@
             totalpage: [],
             pagenum: '',
             currentpage: 0,
-            sites: [[${allSite}]]
+            workloads: [[${allWorkLoads}]]
         }
     })
 </script>
